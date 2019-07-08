@@ -1,0 +1,16 @@
+<datasources>
+	<datasource jndi-name="java:/wentTherePool" pool-name="asds-pool"
+		enabled="true" use-ccm="false">
+		<connection-url>jdbc:mysql://localhost/wentthere?useSSL=false</connection-url>
+		<driver>mysql</driver>
+		<pool>
+			<min-pool-size>2</min-pool-size>
+			<max-pool-size>10</max-pool-size>
+			<prefill>true</prefill>
+		</pool>		
+		<security>
+			<user-name>root</user-name>
+			<password>123456</password>
+		</security>
+	</datasource>
+</datasources>

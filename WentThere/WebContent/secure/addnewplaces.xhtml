@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<title>Add new places</title>
+
+	<div class="col-lg-12 ui-menu ui-menubar ui-widget ui-widget-content ui-corner-all ui-helper-clearfix"
+					style="display: flex; justify-content: space-between;"> 
+		<font size="10" color="blue" style="font-weight: bold">Add New Places</font>
+	</div>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="icon" type="image/png" href="../images/icons/favicon.ico" />
+	<link rel="stylesheet" type="text/css"
+		href="../vendor/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css"
+		href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css"
+		href="../vendor/animate/animate.css" />
+	<link rel="stylesheet" type="text/css"
+		href="../vendor/css-hamburgers/hamburgers.min.css" />
+	<link rel="stylesheet" type="text/css"
+		href="../vendor/select2/select2.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/util.css" />
+	<link rel="stylesheet" type="text/css" href="../css/main.css" />
+
+	<script
+		src="http://maps.google.com/maps/api/js?key={TypeYourApiKey}"
+		type="text/javascript"></script>
+
+</h:head>
+<body>
+
+	<div>
+		<div>
+			<div>
+
+				<div
+					class="col-lg-12 ui-menu ui-menubar ui-widget ui-widget-content ui-corner-all ui-helper-clearfix"
+					style="display: flex; justify-content: space-between;">
+
+					<div class="col-lg-6">
+						<span style="text-align: right;"> 
+							<p:button href="visitedplaces.xhtml"
+								value="Visited  places page..." />
+
+						</span>
+					</div>
+
+
+					<div class="col-offset-3 col-lg-3">
+						<span style="text-align: left;"> <p:commandButton
+								action="#{loginBean.logout()}" value="Log out" /> <h:outputLabel
+								for="name" value="User name: #{loginBean.currentUser.name}" />
+
+						</span>
+
+					</div>
+
+				</div>
+
+
+				<hr />
+
+				<p:growl id="messages" showDetail="true" />
+				<div class="ui-panel ui-widget ui-widget-content ui-corner-all"
+					align="center" border="2" cellpadding="2" cellspacing="2">
+					<p:gmap id="gmap" center="41.015137, 28.979530" zoom="9"
+						type="HYBRID" style="height:600px;width: 100%;"
+						onPointClick="handlePointClick(event);" widgetVar="map">
+
+					</p:gmap>
+
+				</div>
+
+
+				<p:dialog widgetVar="dialog" showEffect="fade">
+					<h:form prependId="false">
+						<h:panelGrid columns="2">
+							<h:outputLabel for="title" value="Title:" />
+							<p:inputText id="title" value="#{addresBean.addressName}" />
+							<h:outputLabel for="description" value="Description:" />
+							<p:inputText id="description"
+								value="#{addresBean.addressDescription}" />
+							<h:outputLabel for="lat" value="Latitude:" />
+							<p:inputText id="lat" value="#{addresBean.lat}" />
+							<h:outputLabel for="lng" value="Longtitute:" />
+							<p:inputText id="lng" value="#{addresBean.lon}" />
+
+							<f:facet name="footer">
+								<p:commandButton value="Add"
+									actionListener="#{addresBean.saveAddres()}" update=":messages"
+									oncomplete="markerAddComplete()" />
+								<p:commandButton value="Cancel" onclick="return cancel()" />
+							</f:facet>
+						</h:panelGrid>
+
+					</h:form>
+				</p:dialog>
+
+
+				<script type="text/javascript">
+							    var currentMarker = null;
+							 
+							    function handlePointClick(event) {
+							        if(currentMarker === null) {
+							            document.getElementById('lat').value = event.latLng.lat();
+							            document.getElementById('lng').value = event.latLng.lng();
+							 
+							            currentMarker = new google.maps.Marker({
+							                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+							            });
+							 
+							            PF('map').addOverlay(currentMarker);
+							 
+							            PF('dialog').show();
+							        }   
+							    }
+							 
+							    function markerAddComplete() {
+							        var title = document.getElementById('title');
+							        var description = document.getElementById('description');
+							        currentMarker.setTitle(title.value);
+							        title.value = "";
+							 
+							        currentMarker = null;
+							        PF('dialog').hide();
+							    }
+							 
+							    function cancel() {
+							        PF('dialog').hide();
+							        currentMarker.setMap(null);
+							        currentMarker = null;
+							 
+							        return false;
+							    }
+
+							    window.onload=function() {
+						            PF('dialog').show();
+							    }; 
+							   						
+							</script>
+
+			</div>
+
+
+		</div>
+
+	</div>
+
+
+</body>
+
+
+
+</html>
